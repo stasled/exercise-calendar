@@ -3,46 +3,34 @@ package http
 import (
 	"context"
 	"mycalendar/internal/api"
-	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	httpSwagger "github.com/swaggo/http-swagger"
+	"go.uber.org/zap"
 )
 
-type Events struct {
-	ctx     context.Context
-	service api.Service
-}
+// @title 		Calendar app
+// @version 	1.0
+// @description API Server for Calendar application
 
-type Event struct {
-	Id      string `json:"id,omitempty"`
-	Title   string `json:"title,omitempty"`
-	StartAt string `json:"start_at,omitempty"`
-	EndAt   string `json:"end_at,omitempty"`
-}
+// @host 		localhost:8000
+// @BasePath 	/
 
-func NewEvents(ctx context.Context, s api.Service) *Events {
-	return &Events{
-		ctx:     ctx,
-		service: s,
-	}
-}
+func NewHandler(ctx context.Context, service api.Service, logger *zap.Logger) *chi.Mux {
+	r := chi.NewRouter()
 
-func (e *Events) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		e.GetAll(rw, r)
-		return
-	}
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8000/swagger/doc.json"),
+	))
 
-	if r.Method == http.MethodPost {
-		e.AddEvent(rw, r)
-		return
-	}
+	c := NewController(ctx, service, logger)
 
-	if r.Method == http.MethodPut {
-		e.UpdateEvent(rw, r)
-		return
-	}
+	r.Route("/api/v1", func(r chi.Router) {
+		r.MethodFunc("GET", "/events", c.GetAll)
+		r.MethodFunc("POST", "/events", c.AddEvent)
+		r.MethodFunc("PUT", "/events/{id}", c.UpdateEvent)
+		r.MethodFunc("DELETE", "/events/{id}", c.DeleteEvent)
+	})
 
-	if r.Method == http.MethodDelete {
-		e.DeleteEvent(rw, r)
-		return
-	}
+	return r
 }

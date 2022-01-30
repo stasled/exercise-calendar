@@ -1,0 +1,103 @@
+basePath: /
+definitions:
+  http.Event:
+    properties:
+      end_at:
+        type: string
+      id:
+        type: string
+      start_at:
+        type: string
+      title:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: API Server for Calendar application
+  title: Calendar app
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/http.Event'
+            type: array
+        "500":
+          description: Unable to get events
+          schema:
+            type: string
+      summary: Gett all events
+      tags:
+      - rest
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Title
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: StartAt
+        format: dateTime
+        in: query
+        name: start_at
+        required: true
+        type: string
+      - description: EndAt
+        format: dateTime
+        in: query
+        name: end_at
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create event
+      tags:
+      - rest
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "404":
+          description: not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete event
+      tags:
+      - rest
+swagger: "2.0"

@@ -3,18 +3,21 @@ package proto
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log"
+	"mycalendar/config"
 	"mycalendar/internal/api"
 	"net"
 )
 
-func RunServer(ctx context.Context, service api.Service, host, port string) {
-	listener, err := net.Listen("tcp", host+":"+port)
+func RunServer(ctx context.Context, service api.Service, cfg *config.Config, logger *zap.Logger) {
+	listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", cfg.GrpcServer.Host, cfg.GrpcServer.Port))
 	if err != nil {
-		log.Fatalf("failed to listen %s port: %v", port, err)
+		logger.Fatal("failed to listen port: ",
+			zap.Int("port", cfg.GrpcServer.Port),
+			zap.Error(err))
 	}
 
 	grpcServer := grpc.NewServer()
@@ -22,8 +25,9 @@ func RunServer(ctx context.Context, service api.Service, host, port string) {
 		ctx:     ctx,
 		service: service,
 	})
+	logger.Info("run grpc server")
 	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatalf("unable to run grpc server: %v", err)
+		logger.Fatal("unable to run grpc server.", zap.Error(err))
 	}
 }
 

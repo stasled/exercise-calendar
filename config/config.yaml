@@ -1,0 +1,17 @@
+http_server:
+  host: 127.0.0.1
+  port: 8000
+  timeout_read: 30
+  timeout_write: 30
+  timeout_idle: 30
+
+grpc_server:
+  host: 127.0.0.1
+  port: 5300
+
+db:
+  user: calendar_user
+  password: calendar_password
+  db_name: calendar
+  host: localhost
+  port: 5432

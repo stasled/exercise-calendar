@@ -1,8 +1,10 @@
 package entity
 
+import "time"
+
 type Event struct {
-	Id      string `json:"id,omitempty"`
-	Title   string `json:"title"`
-	StartAt string `json:"start_at"`
-	EndAt   string `json:"end_at"`
+	Id      int       `json:"id,omitempty"`
+	Title   string    `json:"title"`
+	StartAt time.Time `json:"start_at"`
+	EndAt   time.Time `json:"end_at"`
 }

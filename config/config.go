@@ -1,45 +1,54 @@
 package config
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
-	"os"
-	"sync"
+	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
-	HttpServer `json:"http_server"`
-	GrpcServer `json:"grpc_server"`
+	HttpServer `mapstructure:"http_server"`
+	GrpcServer `mapstructure:"grpc_server"`
+	DB         `mapstructure:"db"`
 }
 
 type HttpServer struct {
-	Host string `json:"host"`
-	Port string `json:"port"`
+	Host         string        `mapstructure:"host"`
+	Port         int           `mapstructure:"port"`
+	TimeoutRead  time.Duration `mapstructure:"timeout_read"`
+	TimeoutWrite time.Duration `mapstructure:"timeout_write"`
+	TimeoutIdle  time.Duration `mapstructure:"timeout_idle"`
 }
 
 type GrpcServer struct {
-	Host string `json:"host"`
-	Port string `json:"port"`
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
 }
 
-var once sync.Once
-var instance *Config
+type DB struct {
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	DBName   string `mapstructure:"db_name"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+}
 
 func GetConfig(path string) *Config {
-	once.Do(func() {
-		instance = &Config{}
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(path)
+	viper.AutomaticEnv()
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("Fatal error config file: %w \n", err))
+	}
 
-		file, err := os.Open(path)
-		if err != nil {
-			log.Fatal("unable to open config file.", err)
-		}
-		defer file.Close()
-
-		cfg := json.NewDecoder(file)
-		err = cfg.Decode(&instance)
-		if err != nil {
-			log.Fatal("unable to parse config file.", err)
-		}
-	})
-	return instance
+	var cfg Config
+	err = viper.Unmarshal(&cfg)
+	if err != nil {
+		log.Fatalf("unable to decode into struct, %v", err)
+	}
+	return &cfg
 }

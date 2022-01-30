@@ -5,7 +5,7 @@ import (
 	"flag"
 	"go.uber.org/zap"
 	"mycalendar/config"
-	"mycalendar/internal/api/http"
+	"mycalendar/internal/api/proto"
 	"mycalendar/internal/storage/postgres"
 	"mycalendar/internal/usecase"
 )
@@ -27,5 +27,5 @@ func main() {
 	service := usecase.NewService(storage)
 
 	logger.Info("run http server")
-	http.RunServer(ctx, service, cfg, logger)
+	proto.RunServer(ctx, service, cfg, logger)
 }

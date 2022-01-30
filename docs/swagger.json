@@ -1,0 +1,155 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Server for Calendar application",
+        "title": "Calendar app",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "paths": {
+        "/": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rest"
+                ],
+                "summary": "Gett all events",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/http.Event"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unable to get events",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rest"
+                ],
+                "summary": "Delete event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rest"
+                ],
+                "summary": "Create event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Title",
+                        "name": "title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "dateTime",
+                        "description": "StartAt",
+                        "name": "start_at",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "dateTime",
+                        "description": "EndAt",
+                        "name": "end_at",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "http.Event": {
+            "type": "object",
+            "properties": {
+                "end_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "start_at": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
