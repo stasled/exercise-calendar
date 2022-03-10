@@ -1,13 +1,12 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API Server for Calendar application",
-        "title": "Calendar app",
+        "description": "App Calendar server REST API.",
+        "title": "Calendar API",
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8000",
-    "basePath": "/",
+    "basePath": "/api/v1",
     "paths": {
         "/": {
             "get": {
@@ -18,7 +17,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "rest"
+                    "Event"
                 ],
                 "summary": "Gett all events",
                 "responses": {
@@ -47,7 +46,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "rest"
+                    "Event"
                 ],
                 "summary": "Delete event",
                 "parameters": [
@@ -88,7 +87,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "rest"
+                    "Event"
                 ],
                 "summary": "Create event",
                 "parameters": [
@@ -138,16 +137,26 @@
             "type": "object",
             "properties": {
                 "end_at": {
-                    "type": "string"
+                    "description": "The date and time of a event ended",
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2006-01-02T15:04:05.000Z"
                 },
                 "id": {
-                    "type": "string"
+                    "description": "The unique identificator of a event",
+                    "type": "integer",
+                    "example": 10
                 },
                 "start_at": {
-                    "type": "string"
+                    "description": "The date and time of a event started",
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2006-01-02T15:04:05.000Z"
                 },
                 "title": {
-                    "type": "string"
+                    "description": "The title of a event",
+                    "type": "string",
+                    "example": "Webinar Getting Started with Swagger"
                 }
             }
         }

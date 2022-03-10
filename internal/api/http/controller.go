@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"mycalendar/internal/api"
 	"net/http"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 type events struct {
@@ -25,15 +26,19 @@ func NewController(ctx context.Context, s api.Service, l *zap.Logger) *events {
 }
 
 type Event struct {
-	Id      int    `json:"id,omitempty"`
-	Title   string `json:"title,omitempty"`
-	StartAt string `json:"start_at,omitempty"`
-	EndAt   string `json:"end_at,omitempty"`
+	// The unique identificator of a event
+	Id int `json:"id,omitempty" example:"10"`
+	// The title of a event
+	Title string `json:"title,omitempty" example:"Webinar Getting Started with Swagger"`
+	// The date and time of a event started
+	StartAt string `json:"start_at,omitempty" example:"2006-01-02T15:04:05.000Z" format:"date-time"`
+	// The date and time of a event ended
+	EndAt string `json:"end_at,omitempty" example:"2006-01-02T15:04:05.000Z" format:"date-time"`
 }
 
-// ShowAccount GetAll
+// GetAll godoc
 // @Summary    Gett all events
-// @Tags 	   rest
+// @Tags 	   Event
 // @Accept     json
 // @Produce    json
 // @Success    200 {array} Event
@@ -48,16 +53,16 @@ func (e events) GetAll(rw http.ResponseWriter, _ *http.Request) {
 	toJsonResponse(rw, events)
 }
 
-// ShowAccount  UpdateEvent
+// UpdateEvent  godoc
 // @Summary 	Update event
-// @Tags 		rest
+// @Tags 		Event
 // @Accept      json
 // @Produce     json
 // @Param 		id 	     query string false "Id"
 // @Param 		title    query string false	"Title"
 // @Param 		start_at query string false	"StartAt" Format(dateTime)
 // @Param 		end_at   query string false	"EndAt"   Format(dateTime)
-// @Success     200 {}
+// @Success     200 {string} string ""
 // @Failure     404 {string} string "not found"
 // @Failure     500 {string} string
 // @Router      / [put]
@@ -104,15 +109,15 @@ func (e events) UpdateEvent(rw http.ResponseWriter, r *http.Request) {
 	toJsonResponse(rw, resp)
 }
 
-// ShowAccount  AddEvent
+// AddEvent 	godoc
 // @Summary 	Create event
-// @Tags 		rest
+// @Tags 		Event
 // @Accept      json
 // @Produce     json
 // @Param 		title    query string true	"Title"
 // @Param 		start_at query string true	"StartAt" Format(dateTime)
 // @Param 		end_at   query string true	"EndAt"   Format(dateTime)
-// @Success     200 {}
+// @Success     200 {string} string ""
 // @Failure     500 {string} string
 // @Router      / [post]
 func (e events) AddEvent(rw http.ResponseWriter, r *http.Request) {
@@ -152,13 +157,13 @@ func (e events) AddEvent(rw http.ResponseWriter, r *http.Request) {
 	toJsonResponse(rw, resp)
 }
 
-// ShowAccount  DeleteEvent
+// DeleteEvent  godoc
 // @Summary 	Delete event
-// @Tags 		rest
+// @Tags 		Event
 // @Accept      json
 // @Produce     json
 // @Param 		id  query string true "Id"
-// @Success     200 {string}
+// @Success     200 {string} string ""
 // @Failure     404 {string} string "not found"
 // @Failure     500 {string} string
 // @Router      / [put]

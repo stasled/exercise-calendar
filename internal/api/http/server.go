@@ -4,27 +4,27 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"mycalendar/config"
-	_ "mycalendar/docs"
+	_ "mycalendar/docs/rest"
 	"mycalendar/internal/api"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
-func RunServer(ctx context.Context, service api.Service, cfg *config.Config, logger *zap.Logger) {
+func RunServer(ctx context.Context, service api.Service, logger *zap.Logger) {
 	logger.Debug("Register handler")
 	eh := NewHandler(ctx, service, logger)
 
 	s := http.Server{
-		Addr:         fmt.Sprintf("%s:%d", cfg.HttpServer.Host, cfg.HttpServer.Port),
+		Addr:         fmt.Sprintf("%s:%d", viper.GetString("REST_SERVER_HOST"), viper.GetInt("REST_SERVER_PORT")),
 		Handler:      eh,
-		ReadTimeout:  cfg.HttpServer.TimeoutRead * time.Second,
-		WriteTimeout: cfg.HttpServer.TimeoutWrite * time.Second,
-		IdleTimeout:  cfg.HttpServer.TimeoutIdle * time.Second,
+		ReadTimeout:  viper.GetDuration("REST_SERVER_TIME_READ") * time.Second,
+		WriteTimeout: viper.GetDuration("REST_SERVER_TIME_WRITE") * time.Second,
+		IdleTimeout:  viper.GetDuration("REST_SERVER_TIME_IDLE") * time.Second,
 	}
 
 	logger.Info("Run http server")

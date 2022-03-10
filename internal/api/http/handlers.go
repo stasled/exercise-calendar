@@ -20,7 +20,7 @@ func NewHandler(ctx context.Context, service api.Service, logger *zap.Logger) *c
 	r := chi.NewRouter()
 
 	r.Get("/swagger/*", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8000/swagger/doc.json"),
+		httpSwagger.URL("http://127.0.0.1:8000/swagger/doc.json"),
 	))
 
 	c := NewController(ctx, service, logger)

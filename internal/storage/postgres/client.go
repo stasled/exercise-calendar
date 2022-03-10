@@ -3,15 +3,20 @@ package postgres
 import (
 	"context"
 	"fmt"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
-	"mycalendar/config"
+
+	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/spf13/viper"
 )
 
-func NewClient(ctx context.Context, cfg *config.Config) *pgxpool.Pool {
+func NewClient(ctx context.Context) *pgxpool.Pool {
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s",
-		cfg.DB.User, cfg.DB.Password, cfg.DB.Host, cfg.DB.Port, cfg.DB.DBName)
+		viper.GetString("POSTGRES_USER"),
+		viper.GetString("POSTGRES_PASSWORD"),
+		viper.GetString("POSTGRES_HOST"),
+		viper.GetInt("POSTGRES_PORT"),
+		viper.GetString("POSTGRES_DB"))
 
 	pool, err := pgxpool.Connect(ctx, dsn)
 	if err != nil {

@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"flag"
-	"go.uber.org/zap"
 	"mycalendar/config"
 	"mycalendar/internal/api/proto"
 	"mycalendar/internal/storage/postgres"
 	"mycalendar/internal/usecase"
+
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -18,14 +19,14 @@ func main() {
 	flag.Parse()
 
 	logger.Debug("read config")
-	cfg := config.GetConfig(*path)
+	config.GetConfig(*path)
 
 	ctx := context.Background()
 
-	dbClient := postgres.NewClient(ctx, cfg)
+	dbClient := postgres.NewClient(ctx)
 	storage := postgres.NewStorage(dbClient, logger)
 	service := usecase.NewService(storage)
 
 	logger.Info("run http server")
-	proto.RunServer(ctx, service, cfg, logger)
+	proto.RunServer(ctx, service, logger)
 }

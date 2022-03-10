@@ -1,21 +1,30 @@
-basePath: /
+basePath: /api/v1
 definitions:
   http.Event:
     properties:
       end_at:
+        description: The date and time of a event ended
+        example: "2006-01-02T15:04:05.000Z"
+        format: date-time
         type: string
       id:
-        type: string
+        description: The unique identificator of a event
+        example: 10
+        type: integer
       start_at:
+        description: The date and time of a event started
+        example: "2006-01-02T15:04:05.000Z"
+        format: date-time
         type: string
       title:
+        description: The title of a event
+        example: Webinar Getting Started with Swagger
         type: string
     type: object
-host: localhost:8000
 info:
   contact: {}
-  description: API Server for Calendar application
-  title: Calendar app
+  description: App Calendar server REST API.
+  title: Calendar API
   version: "1.0"
 paths:
   /:
@@ -37,7 +46,7 @@ paths:
             type: string
       summary: Gett all events
       tags:
-      - rest
+      - Event
     post:
       consumes:
       - application/json
@@ -72,7 +81,7 @@ paths:
             type: string
       summary: Create event
       tags:
-      - rest
+      - Event
     put:
       consumes:
       - application/json
@@ -99,5 +108,5 @@ paths:
             type: string
       summary: Delete event
       tags:
-      - rest
+      - Event
 swagger: "2.0"

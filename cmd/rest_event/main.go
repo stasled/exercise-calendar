@@ -10,6 +10,10 @@ import (
 	"mycalendar/internal/usecase"
 )
 
+// @title Calendar API
+// @version 1.0
+// @description App Calendar server REST API.
+// @BasePath /api/v1
 func main() {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
@@ -18,14 +22,14 @@ func main() {
 	flag.Parse()
 
 	logger.Debug("read config")
-	cfg := config.GetConfig(*path)
+	config.GetConfig(*path)
 
 	ctx := context.Background()
 
-	dbClient := postgres.NewClient(ctx, cfg)
+	dbClient := postgres.NewClient(ctx)
 	storage := postgres.NewStorage(dbClient, logger)
 	service := usecase.NewService(storage)
 
 	logger.Info("run http server")
-	http.RunServer(ctx, service, cfg, logger)
+	http.RunServer(ctx, service, logger)
 }
